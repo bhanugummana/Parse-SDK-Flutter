@@ -15,7 +15,8 @@ dependencies:
   web_socket_channel: ^1.1.0
   # connectivity: ^0.4.6+2
   connectivity: ^0.4.9
-  connectivity: ^0.4.9
+  connectivity_for_web: ^0.3.0
+
 
 
 
