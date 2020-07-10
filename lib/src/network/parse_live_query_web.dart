@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:html' as html;
 
 // import 'package:connectivity/connectivity.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../parse_server_sdk.dart';
@@ -42,10 +41,10 @@ class Subscription<T extends ParseObject> {
 enum LiveQueryClientEvent { CONNECTED, DISCONNECTED, USER_DISCONNECTED }
 
 class LiveQueryReconnectingController with WidgetsBindingObserver {
-
   LiveQueryReconnectingController(
       this._reconnect, this._eventStream, this.debug) {
-    _connectivityChanged(ConnectivityResult.wifi);
+    _setReconnect();
+    // _connectivityChanged(ConnectivityResult.wifi);
     _eventStream.listen((LiveQueryClientEvent event) {
       switch (event) {
         case LiveQueryClientEvent.CONNECTED:
@@ -82,22 +81,23 @@ class LiveQueryReconnectingController with WidgetsBindingObserver {
   final bool debug;
 
   int _retryState = 0;
-  bool _isOnline = false;
+  // bool _isOnline = false;
+  final bool _isOnline = true;
   bool _isConnected = false;
   bool _userDisconnected = false;
 
   Timer _currentTimer;
 
-  void _connectivityChanged(ConnectivityResult state) {
-    if (!_isOnline && state != ConnectivityResult.none) {
-      _retryState = 0;
-    }
-    _isOnline = state != ConnectivityResult.none;
-    if (debug) {
-      print('$DEBUG_TAG: $state');
-    }
-    _setReconnect();
-  }
+  // void _connectivityChanged(ConnectivityResult state) {
+  //   if (!_isOnline && state != ConnectivityResult.none) {
+  //     _retryState = 0;
+  //   }
+  //   _isOnline = state != ConnectivityResult.none;
+  //   if (debug) {
+  //     print('$DEBUG_TAG: $state');
+  //   }
+  //   _setReconnect();
+  // }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -180,7 +180,6 @@ class Client {
   StreamController<LiveQueryClientEvent> _clientEventStreamController;
   Stream<LiveQueryClientEvent> _clientEventStream;
   LiveQueryReconnectingController reconnectingController;
-
 
   final Map<int, Subscription> _requestSubScription = <int, Subscription>{};
 
@@ -342,7 +341,6 @@ class Client {
     _webSocket.send(jsonEncode(connectMessage));
 //    _channel.sink.add(jsonEncode(connectMessage));
   }
-
 
   void _subscribeLiveQuery(Subscription subscription) {
     if (subscription._enabled) {
